@@ -100,6 +100,26 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .nav .wrap{display:flex}
 .nav button{flex:1;border:0;background:transparent;padding:10px 0 11px;font-weight:600;font-size:12px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px}
 .nav button.on{color:var(--ink)}
+.welcome{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:calc(28px + env(safe-area-inset-top)) 0 calc(22px + env(safe-area-inset-bottom))}
+.welcome .wrap{flex:1;display:flex;flex-direction:column}
+.wbody{flex:1;display:flex;flex-direction:column;justify-content:center;padding:12px 2px}
+.wmark{width:64px;height:64px;border-radius:20px;background:var(--ink);display:grid;place-items:center;margin-bottom:26px}
+.wmark svg{width:34px;height:34px}
+.wbody h1{margin:0;font-size:36px;font-weight:800;letter-spacing:-.045em;line-height:1.04}
+.wbody h1 span{color:var(--muted);font-weight:600}
+.wbody>p{margin:12px 0 0;color:var(--muted);font-weight:500;font-size:17px;line-height:1.45;max-width:30em}
+.wfeat{display:flex;flex-direction:column;gap:18px;margin-top:28px}
+.wf{display:flex;gap:14px;align-items:flex-start}
+.wf .wi{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.wf b{display:block;font-size:16.5px;font-weight:700;letter-spacing:-.02em}
+.wf span{display:block;color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.4;margin-top:2px}
+.wname{width:100%;margin-top:26px;padding:16px 18px;border:1.5px solid var(--line);border-radius:16px;font:inherit;font-weight:700;font-size:20px;letter-spacing:-.02em;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);outline:none}
+.wname:focus{border-color:var(--ink)}
+.wdots{display:flex;gap:7px;justify-content:center;margin:0 0 16px}
+.wdots i{width:7px;height:7px;border-radius:99px;background:var(--pri-b);transition:width .25s,background .25s}
+.wdots i.on{width:22px;background:var(--ink)}
+.wacts{display:flex;flex-direction:column;gap:10px}
+.nameedit{background:none;border:0;color:var(--muted);font:inherit;font-size:12.5px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:6px}
 .foot-note{display:flex;gap:6px;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:12.5px;font-weight:500;margin:10px 0 18px}
 /* dictionary */
 .searchbox{position:relative;margin:0 0 12px}
@@ -874,7 +894,7 @@ const autoSpeak=t=>{if(S.audio)speak(t)};
 
 // ---------- state ----------
 const LS='rxenglish.v1';
-const defaultState=()=>({xp:0,streak:0,lastDay:null,todayXp:0,todayDate:null,done:{},words:{},audio:true,ui:{},updatedAt:0});
+const defaultState=()=>({name:'',xp:0,streak:0,lastDay:null,todayXp:0,todayDate:null,done:{},words:{},audio:true,ui:{},updatedAt:0});
 let S=defaultState();
 try{const r=localStorage.getItem(LS);if(r)S=Object.assign(defaultState(),JSON.parse(r))}catch(e){}
 const saveLocal=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
@@ -882,7 +902,7 @@ let dbRef=null,saving=false,again=false,cloudOk=false;
 async function pushCloud(){if(!dbRef)return;if(saving){again=true;return}saving=true;try{await dbRef.set(JSON.parse(JSON.stringify(S)));cloudOk=true}catch(e){const c=e&&e.code;if(c==='invalid_argument'||c==='revoked'||c==='not_granted'||c==='capability_disabled'||c==='quota_exceeded'){dbRef=null;cloudOk=false}}saving=false;if(again){again=false;pushCloud()}}
 function save(){S.updatedAt=Date.now();saveLocal();pushCloud()}
 let cloudStarted=false;
-async function initCloud(){if(cloudStarted)return;if(!window.claude||typeof claude.use!=='function')return;cloudStarted=true;try{const [user,db]=await Promise.all([claude.use('user'),claude.use('db')]);if(!user||!db)return;const id=await user.id();if(!id)return;dbRef=db.doc('data/users/'+id+'/progress');const snap=await dbRef.get();if(snap&&snap.exists){const r=snap.data()||{};cloudOk=true;if((r.updatedAt||0)>(S.updatedAt||0)){S=Object.assign(defaultState(),JSON.parse(JSON.stringify(r)));saveLocal();if(view==='home'||view==='gloss')render()}else if((S.updatedAt||0)>(r.updatedAt||0))pushCloud()}else if(S.updatedAt)pushCloud();else cloudOk=true;if(view==='home')render()}catch(e){dbRef=null}}
+async function initCloud(){if(cloudStarted)return;if(!window.claude||typeof claude.use!=='function')return;cloudStarted=true;try{const [user,db]=await Promise.all([claude.use('user'),claude.use('db')]);if(!user||!db)return;const id=await user.id();if(!id)return;dbRef=db.doc('data/users/'+id+'/progress');const snap=await dbRef.get();if(snap&&snap.exists){const r=snap.data()||{};cloudOk=true;if((r.updatedAt||0)>(S.updatedAt||0)){S=Object.assign(defaultState(),JSON.parse(JSON.stringify(r)));saveLocal();if(view==='welcome'&&S.name&&!wedit){view='home';wstep=0}if(view==='home'||view==='gloss'||view==='welcome')render()}else if((S.updatedAt||0)>(r.updatedAt||0))pushCloud()}else if(S.updatedAt)pushCloud();else cloudOk=true;if(view==='home')render()}catch(e){dbRef=null}}
 initCloud();window.addEventListener('load',initCloud);
 
 function streakNow(){return(S.lastDay===dayKey()||S.lastDay===yesterdayKey())?S.streak:0}
@@ -923,9 +943,22 @@ function buildLesson(key){
 let toastT=null;
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon('lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
 // ---------- views ----------
-let view='home',L=null,EX=null,query='',openG=null;
-function render(){setAccent(BRAND);if(view==='home')renderHome();else if(view==='gloss')renderGloss();}
+let wstep=0,wedit=false;let view=S.name?'home':'welcome',L=null,EX=null,query='',openG=null;
+function render(){setAccent(BRAND);if(view==='welcome')renderWelcome();else if(view==='home')renderHome();else if(view==='gloss')renderGloss();}
 
+function cleanName(v){return String(v||'').replace(/\s+/g,' ').trim().slice(0,24)}
+function renderWelcome(){
+ if(!S.name&&Object.keys(S.done||{}).length&&wstep<2&&!wedit)wstep=2;
+ const dots=`<div class="wdots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i===wstep?'on':''}"></i>`).join('')}</div>`;
+ let body,acts;
+ if(wstep===0){body=`<div class="wmark">${MARK}</div><h1>Rx <span>English</span></h1><p>Inglés de la industria farmacéutica, pensado para el trabajo de CRA. Lecciones cortas, con audio y situaciones reales.</p>`;acts=`<button class="btn" data-act="wnext">Empezar</button>`}
+ else if(wstep===1){body=`<h1>Así vas a aprender</h1><div class="wfeat">
+  <div class="wf"><span class="wi" style="background:#1B7066">${icon('zap',22)}</span><div><b>Lecciones de pocos minutos</b><span>Palabras, frases y ejercicios para elegir, escribir y escuchar.</span></div></div>
+  <div class="wf"><span class="wi" style="background:#2F5DA8">${icon('msg',22)}</span><div><b>Conversaciones de trabajo</b><span>Practica llamadas y reuniones con centros, monitores y sponsors.</span></div></div>
+  <div class="wf"><span class="wi" style="background:#8A5A12">${icon('repeat',22)}</span><div><b>Repaso inteligente</b><span>La app vuelve a preguntarte lo que más te cuesta.</span></div></div></div>`;acts=`<button class="btn" data-act="wnext">Continuar</button>`}
+ else{body=`<h1>${wedit?'Cambiar nombre':'¿Cómo te llamas?'}</h1><p>${wedit?'Así te saludaremos al entrar.':'Así te saludaremos cada vez que entres.'}</p><input class="wname" id="wname" type="text" maxlength="24" placeholder="Tu nombre" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" value="${esc(S.name||'')}">`;acts=`<button class="btn" id="wgo" data-act="wsave" ${cleanName(S.name)?'':'disabled'}>${wedit?'Guardar':'Entrar'}</button>${wedit?`<button class="btn ghostbtn" data-act="wcancel">Cancelar</button>`:''}`}
+ $('#app').innerHTML=`<div class="welcome"><div class="wrap"><div class="wbody">${body}</div>${wedit?'':dots}<div class="wacts">${acts}</div></div></div>`;
+ const inp=$('#wname');if(inp){const go=()=>{const n=cleanName(inp.value);if(!n)return;S.name=n;wedit=false;wstep=0;view='home';save();window.scrollTo(0,0);render()};inp.addEventListener('input',()=>{const b=$('#wgo');if(b)b.disabled=!cleanName(inp.value)});inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go()}});$('#wgo').onclick=go;if(wstep===2&&!wedit)setTimeout(()=>{try{inp.focus()}catch(_){}} ,350)}}
 function header(){const st=streakNow();return `<div class="top"><div class="wrap"><div class="logo"><span class="mark">${MARK}</span><span class="wm">Rx <span>English</span></span></div><div class="chip fire" title="Racha">${icon('flame',17)}<span>${st}</span></div><div class="chip xp" title="Puntos">${icon('zap',17)}<span>${S.xp}</span></div><button class="iconbtn" data-act="audio" title="Sonido" aria-label="Sonido">${icon(S.audio?'vol':'volx',20)}</button></div></div>`}
 function nav(){return `<div class="nav"><div class="wrap"><button class="${view==='home'?'on':''}" data-act="go-home">${icon('home',22)}<span>Aprender</span></button><button class="${view==='gloss'?'on':''}" data-act="go-gloss">${icon('book',22)}<span>Diccionario</span></button></div></div>`}
 function nextKey(){for(const u of UNITS)for(const k of lessonKeys(u))if(S.done[k]==null)return k;return null}
@@ -941,13 +974,13 @@ function unitCard(u,nk,openId){const keys=lessonKeys(u);const d=keys.filter(k=>S
 function renderHome(){
  const tx=todayXp(),pct=Math.min(100,Math.round(tx/GOAL*100)),nk=nextKey(),seen=seenWords().length,openId=nk?nk.split('-')[0]:((AREA_UNITS.find(u=>lessonKeys(u).some(k=>S.done[k]==null))||{}).id||null);
  const hr=new Date().getHours();const hi=hr<13?'Buenos días':hr<20?'Buenas tardes':'Buenas noches';
- let html=header()+`<div class="wrap"><div class="hello"><h1>${hi}</h1><p>${tx>=GOAL?'Dosis completa por hoy. Una lección más nunca sobra.':'Unos minutos al día y el inglés de CRA se vuelve automático.'}</p></div>
+ let html=header()+`<div class="wrap"><div class="hello"><h1>${hi}${S.name?', '+esc(S.name):''}</h1><p>${tx>=GOAL?'Dosis completa por hoy. Una lección más nunca sobra.':'Unos minutos al día y el inglés de CRA se vuelve automático.'}</p></div>
  <div class="dose"><div class="lbl"><span>Dosis de hoy</span><small>${Math.min(tx,GOAL)} de ${GOAL} XP</small></div><div class="capsule" role="progressbar" aria-valuemin="0" aria-valuemax="${GOAL}" aria-valuenow="${Math.min(tx,GOAL)}"><i style="width:${pct}%"></i></div></div>
  <div class="stats"><div class="stat"><b>${icon('flame',20)}${streakNow()}</b><span>días de racha</span></div><div class="stat"><b>${mastered()}<small>de ${ALL.length}</small></b><span>términos dominados</span></div><div class="stat"><b>${Object.keys(S.done).length}</b><span>lecciones hechas</span></div></div>
  <button class="review" data-act="review" ${seen<4?'disabled':''}><span class="rico">${icon('repeat',20)}</span><div><b>Repaso inteligente</b><span>${seen<4?'Se activa al completar tu primera lección':'Practica los términos que más te cuestan'}</span></div></button>
  <div class="sec">Ruta CRA</div><div class="secnote">Empieza por aquí. Cada lección desbloquea la siguiente.</div>`;
  html+=UNITS.map(u=>unitCard(u,nk,openId)).join('')+scenesBlock()+`<div class="sec">Áreas de la industria</div><div class="secnote">Vocabulario por departamento y situación de trabajo.</div>`+AREA_UNITS.map(u=>unitCard(u,null,openId)).join('');
- html+=`<div class="foot-note">${cloudOk?icon('cloud',15)+'Progreso guardado en tu cuenta':'Progreso guardado en este dispositivo'}</div></div>`+nav();
+ html+=`<div class="foot-note"><button class="nameedit" data-act="rename">Cambiar nombre</button></div><div class="foot-note">${cloudOk?icon('cloud',15)+'Progreso guardado en tu cuenta':'Progreso guardado en este dispositivo'}</div></div>`+nav();
  $('#app').innerHTML=html;
  if(popKey){const n=document.querySelector('.lnode.pop');if(n)setTimeout(()=>{try{n.scrollIntoView({block:'center'})}catch(_){}},0);popKey=null}}
 let gfilter='all';
@@ -1068,6 +1101,10 @@ document.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');
  if(a==='say'||a==='sayslow'){ev.stopPropagation();speak(el.dataset.t,a==='sayslow');return}
  switch(a){
  case 'audio':S.audio=!S.audio;save();render();break;
+ case 'wnext':wstep=Math.min(2,wstep+1);render();break;
+ case 'rename':wedit=true;wstep=2;view='welcome';window.scrollTo(0,0);render();break;
+ case 'wcancel':wedit=false;wstep=0;view='home';render();break;
+ case 'wsave':break;
  case 'go-home':view='home';window.scrollTo(0,0);render();break;
  case 'go-gloss':view='gloss';window.scrollTo(0,0);render();break;
  case 'gopen':openG=openG===el.dataset.id?null:el.dataset.id;el.classList.toggle('open');document.querySelectorAll('.gitem.open').forEach(g=>{if(g!==el)g.classList.remove('open')});break;
