@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -21,16 +21,18 @@
 --ok:#1F8A5B;--ok-bg:#E2F2EA;--ok-ink:#17613F;--bad:#C2453D;--bad-bg:#FAE7E5;--bad-ink:#8D2B25;
 --sans:'Schibsted Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;--text:'Newsreader',Georgia,'Times New Roman',serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;overflow-x:hidden;overscroll-behavior:none}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text}
 button{font-family:inherit;cursor:pointer;color:inherit}
 button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
 .ic{display:block;flex:none}
 .ic.fill{fill:currentColor}
-.wrap{max-width:540px;margin:0 auto;padding:0 16px}
+.wrap{max-width:540px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left))}
 #app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 #app>.wrap{flex:1 0 auto;width:100%}
 /* header */
-.top{position:sticky;top:0;z-index:5;background:rgba(237,240,241,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top{position:sticky;top:0;z-index:5;padding-top:env(safe-area-inset-top);background:rgba(237,240,241,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:4px;height:60px}
 .logo{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .mark{width:34px;height:34px;border-radius:11px;background:var(--ink);display:grid;place-items:center;flex:none}
@@ -177,9 +179,11 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .kp span{flex:1}
 .kp .spk{width:34px;height:34px}
 .endbtns{display:grid;gap:10px}
+@media (max-width:389px){.lessons{gap:12px 6px;padding:16px 10px}.lnode{width:60px}.lnode.pc{width:76px}.lnode i{width:48px;height:48px;font-size:18px}.lnode.pc i{width:72px}.lnode span{font-size:11px}.utile{width:38px;height:38px;border-radius:12px}.uhead{gap:10px;padding:14px 12px}.hello h1{font-size:27px}.stat b{font-size:23px}.term b{font-size:24px}.fterm b{font-size:27px}}
+@media (max-width:340px){.lessons{gap:12px 4px}.lnode{width:56px}.lnode.pc{width:70px}.lnode i{width:44px;height:44px;font-size:17px}.lnode.pc i{width:66px}.lnode span{font-size:10.5px}}
 /* lesson */
 .lesson{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
-.lbar{display:flex;align-items:center;gap:10px;padding:14px 0}
+.lbar{display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top)) 0 14px}
 .bar{height:8px;background:#DCE2E5;border-radius:99px;overflow:hidden}
 .bar>i{display:block;height:100%;background:var(--pri);border-radius:99px;transition:width .4s}
 .lbar .bar{flex:1}
@@ -241,7 +245,7 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .btn.bad{background:var(--bad)}
 .btn.ghostbtn{background:#fff;color:var(--muted);border:1.5px solid var(--line)}
 /* end */
-.end{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:24px 0}
+.end{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:calc(24px + env(safe-area-inset-top)) 0 calc(24px + env(safe-area-inset-bottom))}
 .ring{width:96px;height:96px;border-radius:50%;margin:0 auto 20px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 12%,#fff);color:var(--c);box-shadow:inset 0 0 0 2px var(--c),0 0 0 10px color-mix(in srgb,var(--c) 9%,transparent);animation:take .55s cubic-bezier(.2,1.4,.4,1)}
 .end h2{font-size:32px;font-weight:800;letter-spacing:-.04em;margin:0 0 6px}
 .end p{color:var(--muted);font-weight:500;margin:0 0 26px}
@@ -255,7 +259,7 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .sheet h3{margin:0 0 6px;font-size:22px;font-weight:800;letter-spacing:-.03em}
 .sheet p{margin:0 0 18px;color:var(--muted);font-weight:500}
 .sheet .btn+.btn{margin-top:12px}
-.toast{display:none;position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 16px;border-radius:14px;font-weight:600;font-size:14px;z-index:30;width:max-content;max-width:min(90vw,420px);align-items:center;gap:8px;line-height:1.35}
+.toast{display:none;position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 16px;border-radius:14px;font-weight:600;font-size:14px;z-index:30;width:max-content;max-width:min(90vw,420px);align-items:center;gap:8px;line-height:1.35}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1098,6 +1102,9 @@ function matchTap(side,id){const m=EX.m;if(side==='ma'){m.a=m.a===id?null:id;con
   else{m.errs++;const ia=m.a,ib=m.b;bump(W[ia],false);m.a=m.b=null;renderEx(false);document.querySelectorAll(`.mt[data-id="${ia}"][data-act="ma"],.mt[data-id="${ib}"][data-act="mb"]`).forEach(x=>x.classList.add('err'))}}
  else renderEx(false)}
 
+// app-like: block pinch-zoom (iOS gesture events + multi-touch moves); double-tap zoom is off via touch-action
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.matches&&e.target.matches('.uhead')){e.preventDefault();e.target.click()}});
 render();
 </script>
