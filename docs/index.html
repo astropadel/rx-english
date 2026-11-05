@@ -941,8 +941,17 @@ function buildLesson(key){
  return seqFor(ws,['enes','enes','match','fill','listen','build','esen','fill','type','build'],u,sents)}
 
 let toastT=null;
-function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon('lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
+function toast(msg,ic){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon(ic||'lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
 // ---------- views ----------
+const BUILD='2026-11-06.9';
+const CAN_UPDATE=/github\.io$|^localhost$|^127\./.test(location.hostname);
+let updating=false;
+async function checkUpdate(){if(updating)return;updating=true;const b=document.getElementById('updbtn');if(b){b.disabled=true;b.textContent='Buscando…'}
+ try{const r=await fetch(location.pathname+'?chk='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const m=(await r.text()).match(/const BUILD='([^']+)'/);if(!m)throw 0;
+  if(m[1]!==BUILD){toast('Actualizando a la nueva versión…','cloud');setTimeout(()=>location.replace(location.pathname+'?v='+Date.now()),700);return}
+  toast('Ya tienes la última versión','check')}
+ catch(e){toast('No se pudo comprobar. Revisa tu conexión.','alert')}
+ updating=false;if(b){b.disabled=false;b.textContent='Buscar actualización'}}
 let wstep=0,wedit=false;let view=S.name?'home':'welcome',L=null,EX=null,query='',openG=null;
 function render(){setAccent(BRAND);if(view==='welcome')renderWelcome();else if(view==='home')renderHome();else if(view==='gloss')renderGloss();}
 
@@ -980,7 +989,7 @@ function renderHome(){
  <button class="review" data-act="review" ${seen<4?'disabled':''}><span class="rico">${icon('repeat',20)}</span><div><b>Repaso inteligente</b><span>${seen<4?'Se activa al completar tu primera lección':'Practica los términos que más te cuestan'}</span></div></button>
  <div class="sec">Ruta CRA</div><div class="secnote">Empieza por aquí. Cada lección desbloquea la siguiente.</div>`;
  html+=UNITS.map(u=>unitCard(u,nk,openId)).join('')+scenesBlock()+`<div class="sec">Áreas de la industria</div><div class="secnote">Vocabulario por departamento y situación de trabajo.</div>`+AREA_UNITS.map(u=>unitCard(u,null,openId)).join('');
- html+=`<div class="foot-note"><button class="nameedit" data-act="rename">Cambiar nombre</button></div><div class="foot-note">${cloudOk?icon('cloud',15)+'Progreso guardado en tu cuenta':'Progreso guardado en este dispositivo'}</div></div>`+nav();
+ html+=`<div class="foot-note"><button class="nameedit" data-act="rename">Cambiar nombre</button>${CAN_UPDATE?'<button class="nameedit" id="updbtn" data-act="update">Buscar actualización</button>':''}</div><div class="foot-note">${cloudOk?icon('cloud',15)+'Progreso guardado en tu cuenta':'Progreso guardado en este dispositivo'}<span style="opacity:.6">&nbsp;· v${BUILD}</span></div></div>`+nav();
  $('#app').innerHTML=html;
  if(popKey){const n=document.querySelector('.lnode.pop');if(n)setTimeout(()=>{try{n.scrollIntoView({block:'center'})}catch(_){}},0);popKey=null}}
 let gfilter='all';
@@ -1101,6 +1110,7 @@ document.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');
  if(a==='say'||a==='sayslow'){ev.stopPropagation();speak(el.dataset.t,a==='sayslow');return}
  switch(a){
  case 'audio':S.audio=!S.audio;save();render();break;
+ case 'update':checkUpdate();break;
  case 'wnext':wstep=Math.min(2,wstep+1);render();break;
  case 'rename':wedit=true;wstep=2;view='welcome';window.scrollTo(0,0);render();break;
  case 'wcancel':wedit=false;wstep=0;view='home';render();break;

@@ -21,3 +21,7 @@ El progreso se guarda en el navegador de cada dispositivo (localStorage). Las ac
 ## Cambiar el contenido
 
 Si cambia el texto de una frase que tiene audio, hay que regenerar su archivo de audio y actualizar `AIDX`. Si no, sonará el audio antiguo o la voz del dispositivo.
+
+## Versión y botón de actualización
+
+`docs/index.html` contiene `const BUILD=...`. Cambia ese valor en cada publicación: el botón "Buscar actualización" de la app compara contra él y recarga si hay una versión nueva.
