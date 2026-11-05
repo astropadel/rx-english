@@ -943,7 +943,7 @@ function buildLesson(key){
 let toastT=null;
 function toast(msg,ic){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon(ic||'lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
 // ---------- views ----------
-const BUILD='2026-11-06.9';
+const BUILD='2026-11-05.2';
 const CAN_UPDATE=/github\.io$|^localhost$|^127\./.test(location.hostname);
 let updating=false;
 async function checkUpdate(){if(updating)return;updating=true;const b=document.getElementById('updbtn');if(b){b.disabled=true;b.textContent='Buscando…'}
@@ -960,7 +960,7 @@ function renderWelcome(){
  if(!S.name&&Object.keys(S.done||{}).length&&wstep<2&&!wedit)wstep=2;
  const dots=`<div class="wdots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i===wstep?'on':''}"></i>`).join('')}</div>`;
  let body,acts;
- if(wstep===0){body=`<div class="wmark">${MARK}</div><h1>Rx <span>English</span></h1><p>Inglés de la industria farmacéutica, pensado para el trabajo de CRA. Lecciones cortas, con audio y situaciones reales.</p>`;acts=`<button class="btn" data-act="wnext">Empezar</button>`}
+ if(wstep===0){body=`<div class="wmark">${MARK}</div><h1>Rx <span>English</span></h1><p>Inglés de la industria farmacéutica, pensado para farmacia y ensayos clínicos. Lecciones cortas, con audio y situaciones reales.</p>`;acts=`<button class="btn" data-act="wnext">Empezar</button>`}
  else if(wstep===1){body=`<h1>Así vas a aprender</h1><div class="wfeat">
   <div class="wf"><span class="wi" style="background:#1B7066">${icon('zap',22)}</span><div><b>Lecciones de pocos minutos</b><span>Palabras, frases y ejercicios para elegir, escribir y escuchar.</span></div></div>
   <div class="wf"><span class="wi" style="background:#2F5DA8">${icon('msg',22)}</span><div><b>Conversaciones de trabajo</b><span>Practica llamadas y reuniones con centros, monitores y sponsors.</span></div></div>
@@ -980,14 +980,17 @@ function unitCard(u,nk,openId){const keys=lessonKeys(u);const d=keys.filter(k=>S
   const inner=lock?icon('lock',18):isP?icon('star',22,done?'fill':''):done?icon('check',24):(i+1);
   h+=`<button class="lnode ${isP?'pc':''} ${cls} ${k===popKey?'pop':''}" data-act="${lock?'locked':'start'}" data-key="${k}" ${lock?'aria-disabled="true"':''}><i>${inner}</i><span>${esc(label)}</span></button>`});
  return h+`</div></div>`}
+const TIPS=['Cinco minutos al día valen más que una hora el domingo.','«Sponsor» no es un patrocinador de marketing: es quien promueve y financia el estudio.','Un «adverse event» es lo que ocurre durante el estudio; no implica que el fármaco lo causara.','«Actually» significa «en realidad», no «actualmente» (currently).','Un estudio doble ciego se dice «double-blind»: ni paciente ni investigador saben qué tratamiento recibe.','«Drug» es fármaco o medicamento; que suene a droga depende del contexto.','Las siglas se dicen letra a letra: G-C-P, C-R-F, S-A-E.','«Informed consent» es un proceso continuo, no solo una firma.','«Eventually» no es «eventualmente»: significa «al final, con el tiempo».','«Pharmacy» es la farmacia y «pharmaceutical», la industria. Un «pharmacist» es quien trabaja en la primera.','Repite en voz alta lo que escuchas: así se fija la pronunciación.','En un ensayo, «compliance» puede referirse a que el paciente sigue el tratamiento.'];
+let tipI=Math.floor(Math.random()*TIPS.length);
+function homeMsg(tx,seen){const none=!Object.keys(S.done).length;if(tx>=GOAL)return'Dosis completa por hoy. Una lección más nunca sobra.';if(none)return'Empieza por la Lección 1: son solo unos minutos.';const pool=TIPS.slice();const st=streakNow();if(st>=2)pool.push('Llevas '+st+' días seguidos. No rompas la racha.');return pool[tipI%pool.length]}
 function renderHome(){
  const tx=todayXp(),pct=Math.min(100,Math.round(tx/GOAL*100)),nk=nextKey(),seen=seenWords().length,openId=nk?nk.split('-')[0]:((AREA_UNITS.find(u=>lessonKeys(u).some(k=>S.done[k]==null))||{}).id||null);
  const hr=new Date().getHours();const hi=hr<13?'Buenos días':hr<20?'Buenas tardes':'Buenas noches';
- let html=header()+`<div class="wrap"><div class="hello"><h1>${hi}${S.name?', '+esc(S.name):''}</h1><p>${tx>=GOAL?'Dosis completa por hoy. Una lección más nunca sobra.':'Unos minutos al día y el inglés de CRA se vuelve automático.'}</p></div>
+ let html=header()+`<div class="wrap"><div class="hello"><h1>${hi}${S.name?', '+esc(S.name):''}</h1><p>${homeMsg(tx,seen)}</p></div>
  <div class="dose"><div class="lbl"><span>Dosis de hoy</span><small>${Math.min(tx,GOAL)} de ${GOAL} XP</small></div><div class="capsule" role="progressbar" aria-valuemin="0" aria-valuemax="${GOAL}" aria-valuenow="${Math.min(tx,GOAL)}"><i style="width:${pct}%"></i></div></div>
  <div class="stats"><div class="stat"><b>${icon('flame',20)}${streakNow()}</b><span>días de racha</span></div><div class="stat"><b>${mastered()}<small>de ${ALL.length}</small></b><span>términos dominados</span></div><div class="stat"><b>${Object.keys(S.done).length}</b><span>lecciones hechas</span></div></div>
  <button class="review" data-act="review" ${seen<4?'disabled':''}><span class="rico">${icon('repeat',20)}</span><div><b>Repaso inteligente</b><span>${seen<4?'Se activa al completar tu primera lección':'Practica los términos que más te cuestan'}</span></div></button>
- <div class="sec">Ruta CRA</div><div class="secnote">Empieza por aquí. Cada lección desbloquea la siguiente.</div>`;
+ <div class="sec">Ensayos clínicos</div><div class="secnote">Empieza por aquí. Cada lección desbloquea la siguiente.</div>`;
  html+=UNITS.map(u=>unitCard(u,nk,openId)).join('')+scenesBlock()+`<div class="sec">Áreas de la industria</div><div class="secnote">Vocabulario por departamento y situación de trabajo.</div>`+AREA_UNITS.map(u=>unitCard(u,null,openId)).join('');
  html+=`<div class="foot-note"><button class="nameedit" data-act="rename">Cambiar nombre</button>${CAN_UPDATE?'<button class="nameedit" id="updbtn" data-act="update">Buscar actualización</button>':''}</div><div class="foot-note">${cloudOk?icon('cloud',15)+'Progreso guardado en tu cuenta':'Progreso guardado en este dispositivo'}<span style="opacity:.6">&nbsp;· v${BUILD}</span></div></div>`+nav();
  $('#app').innerHTML=html;
@@ -1004,7 +1007,7 @@ function flashHTML(){const w=card&&W[card];if(!w)return `<p class="fcount">No ha
  <button class="flink" data-act="fnext" data-k="skip">Saltar a otra palabra</button><div class="fcount">Quedan ${deck.length} de ${deckTotal} en esta ronda</div>`}
 function renderGloss(){
  const q=norm(query);
- const chips=[['all','Todo',null],['route','Ruta CRA',BRAND]].concat(AREA_UNITS.map(a=>[a.id,a.title,a.color]));
+ const chips=[['all','Todo',null],['route','Ensayos clínicos',BRAND]].concat(AREA_UNITS.map(a=>[a.id,a.title,a.color]));
  const chipRow=`<div class="chips">${chips.map(c=>`<button class="fchip ${gfilter===c[0]?'on':''}" data-act="gfilter" data-f="${c[0]}">${c[2]?`<span class="dot" style="background:${c[2]}"></span>`:''}${esc(c[1])}</button>`).join('')}</div>`;
  const seg=`<div class="seg" role="tablist"><button role="tab" aria-selected="${gmode==='list'}" class="${gmode==='list'?'on':''}" data-act="gmode" data-m="list">Lista</button><button role="tab" aria-selected="${gmode==='random'}" class="${gmode==='random'?'on':''}" data-act="gmode" data-m="random">Al azar</button></div>`;
  let html=header()+`<div class="wrap">`+seg;
@@ -1081,7 +1084,7 @@ let SC=null;
 function sceneUnlocked(i){return i<=0||S.done[SCENES[i].id]!=null||S.done[SCENES[i-1].id]!=null}
 function scenesBlock(){let rows='';SCENES.forEach((sc,i)=>{const done=S.done[sc.id]!=null;const lock=!sceneUnlocked(i);
  rows+=`<button class="srow ${done?'done':lock?'lock':''}" data-act="${lock?'locked':'scene'}" data-id="${sc.id}" ${lock?'aria-disabled="true"':''}><span class="snum">${done?icon('check',18):lock?icon('lock',15):i+1}</span><span class="stext"><b>${esc(sc.title)}</b><span>${esc(sc.sub)}</span></span><span class="sstat">${done?S.done[sc.id]+'%':lock?'':icon('right',18)}</span></button>`});
- return `<div class="sec">Situaciones reales</div><div class="secnote">Conversaciones del día a día de una CRA. Elige la respuesta que suene más natural.</div><div class="scenes" style="--c:${SCENE_COLOR}">${rows}</div>`}
+ return `<div class="sec">Situaciones reales</div><div class="secnote">Conversaciones reales del trabajo en ensayos clínicos. Elige la respuesta que suene más natural.</div><div class="scenes" style="--c:${SCENE_COLOR}">${rows}</div>`}
 function hideToast(){const t=document.getElementById('toast');if(t)t.style.display='none'}
 function startScene(id){hideToast();SC={id,i:0,sel:null,checked:false,picks:[],tr:{},order:shuffle([0,1,2])};view='scene';setAccent(SCENE_COLOR);loadSprite(id).catch(()=>{});window.scrollTo(0,0);renderScene(true)}
 function renderScene(first){const sc=SCN[SC.id],n=sc.turns.length,t=sc.turns[SC.i];
@@ -1115,7 +1118,7 @@ document.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');
  case 'rename':wedit=true;wstep=2;view='welcome';window.scrollTo(0,0);render();break;
  case 'wcancel':wedit=false;wstep=0;view='home';render();break;
  case 'wsave':break;
- case 'go-home':view='home';window.scrollTo(0,0);render();break;
+ case 'go-home':tipI++;view='home';window.scrollTo(0,0);render();break;
  case 'go-gloss':view='gloss';window.scrollTo(0,0);render();break;
  case 'gopen':openG=openG===el.dataset.id?null:el.dataset.id;el.classList.toggle('open');document.querySelectorAll('.gitem.open').forEach(g=>{if(g!==el)g.classList.remove('open')});break;
  case 'scene':{const id=el.dataset.id;const i=SCENES.findIndex(s=>s.id===id);if(i<0)break;if(!sceneUnlocked(i)){toast('Completa la situación anterior para desbloquear esta');break}startScene(id);break}

@@ -1,6 +1,6 @@
 # Rx English
 
-App tipo Duolingo de inglés farmacéutico para CRA: vocabulario por áreas de la industria, situaciones reales de trabajo y audio en inglés americano.
+App tipo Duolingo de inglés para farmacia y ensayos clínicos: vocabulario por áreas de la industria, situaciones reales de trabajo y audio en inglés americano.
 
 ## Estructura
 
