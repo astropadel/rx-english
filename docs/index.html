@@ -225,11 +225,15 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .lbar .bar{flex:1}
 .x{border:0;background:transparent;color:var(--muted);padding:6px;border-radius:12px;display:grid;place-items:center}
 .lbody{flex:1;padding-bottom:22px}
-.kindrow{display:flex;align-items:center;gap:12px;margin:6px 0 14px}
+.kindrow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:2px 0 0;padding-left:2px}
+.kindtxt{font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1.2;color:var(--ink);padding-bottom:14px;max-width:62%}
+.kindrow .mascot{margin-right:10px;clip-path:inset(-60px -30px 0 -30px)}
+.kindrow.free{align-items:center;margin-bottom:10px}.kindrow.free .kindtxt{padding-bottom:0}.kindrow.free .mascot{clip-path:none;height:78px}
+.kindrow+.term,.kindrow+.sentence,.kindrow+.esbox{position:relative}
 .bubble{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-size:15.5px;font-weight:700;letter-spacing:-.015em;color:var(--ink)}
 .bubble::before{content:"";position:absolute;left:-6px;top:50%;width:11px;height:11px;background:#fff;border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
-.mascot{display:inline-block;width:46px;height:58px;flex:none}
-.mascot svg{width:100%;height:100%;overflow:visible;display:block;transform-origin:50% 100%}
+.mascot{display:block;width:68px;height:62px;flex:none}
+.mascot svg{width:68px;height:85px;overflow:visible;display:block;transform-origin:50% 100%}
 .mascot .eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
 .mascot.idle svg{animation:bob 2.8s ease-in-out infinite}
 .mascot.happy svg{animation:hop .75s cubic-bezier(.3,.7,.3,1)}
@@ -1046,7 +1050,7 @@ function buildLesson(key){
 let toastT=null;
 function toast(msg,ic){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon(ic||'lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
 // ---------- views ----------
-const BUILD='2026-11-07.5';
+const BUILD='2026-11-07.6';
 (function(){const sp=document.getElementById('splash');if(!sp)return;sp.querySelector('.sm').innerHTML=MARK;let shown=false;try{shown=sessionStorage.getItem('rx.splash')==='1';sessionStorage.setItem('rx.splash','1')}catch(e){}
  if(shown){sp.remove();return}setTimeout(()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),400)},1500)})();
 ;
@@ -1145,7 +1149,7 @@ let lastPct=0;
 function renderEx(first){
  const e=EX.ex,pct=Math.round(L.i/L.q.length*100);
  if(first&&L.i===0)lastPct=0;
- let body=`<div class="kindrow"><span id="mascot" class="mascot ${EX.listening?'listen':'idle'}">${mascot(EX.listening?'listen':'idle')}</span><div class="bubble">${KIND[e.type]}</div></div>`;
+ let body=`<div class="kindrow${['listen','match','speak'].includes(e.type)?' free':''}"><div class="kindtxt">${KIND[e.type]}</div><span id="mascot" class="mascot ${EX.listening?'listen':'idle'}">${mascot(EX.listening?'listen':'idle')}</span></div>`;
  if(e.type==='enes'){body+=`<div class="term">${e.w.noListen||!SPEAKABLE?'':`<button class="spk" data-act="say" data-t="${esc(e.w.en)}" aria-label="Escuchar">${icon('vol',20)}</button>`}<b>${esc(e.w.en)}</b></div>`+opts(e)}
  else if(e.type==='esen'){body+=`<div class="term"><b>${esc(e.w.es)}</b></div>`+opts(e)}
  else if(e.type==='fill'){const v=EX.sel!=null?esc(e.opts[EX.sel]):'&nbsp;';body+=`<div class="sentence">${esc(e.before)}<span class="blank">${v}</span>${esc(e.after)}</div>`+(EX.hint?`<div class="hinttext">${esc(e.w.exEs)}</div>`:`<button class="hint" data-act="hint">Ver traducción</button>`)+opts(e)}
