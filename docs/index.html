@@ -225,24 +225,46 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .lbar .bar{flex:1}
 .x{border:0;background:transparent;color:var(--muted);padding:6px;border-radius:12px;display:grid;place-items:center}
 .lbody{flex:1;padding-bottom:22px}
-.kindrow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:2px 0 0;padding-left:2px}
-.kindtxt{font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1.2;color:var(--ink);padding-bottom:14px;max-width:62%}
-.kindrow .mascot{margin-right:10px;clip-path:inset(-60px -30px 0 -30px)}
-.kindrow.free{align-items:center;margin-bottom:10px}.kindrow.free .kindtxt{padding-bottom:0}.kindrow.free .mascot{clip-path:none;height:78px}
-.kindrow+.term,.kindrow+.sentence,.kindrow+.esbox{position:relative}
+.kindrow{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
 .bubble{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-size:15.5px;font-weight:700;letter-spacing:-.015em;color:var(--ink)}
 .bubble::before{content:"";position:absolute;left:-6px;top:50%;width:11px;height:11px;background:#fff;border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
-.mascot{display:block;width:68px;height:62px;flex:none}
-.mascot svg{width:68px;height:85px;overflow:visible;display:block;transform-origin:50% 100%}
+.mascot{display:block;width:54px;height:81px;flex:none;margin-left:-2px}
+.mascot svg{width:100%;height:100%;overflow:visible;display:block}
+.mascot *{transform-box:view-box}
 .mascot .eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
-.mascot.idle svg{animation:bob 2.8s ease-in-out infinite}
-.mascot.happy svg{animation:hop .75s cubic-bezier(.3,.7,.3,1)}
-.mascot.sad svg{animation:droop .7s ease both}
-.mascot.listen svg{animation:lis 1s ease-in-out infinite}
+.mascot .pup{animation:look 6s ease-in-out infinite}
+.mascot .arm,.mascot .leg{fill:none;stroke:#111C24;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.mascot .bod{transform-origin:32px 80px}
+.mascot.idle .bod{animation:bob 2.6s ease-in-out infinite}
+.mascot.idle .arm.l{animation:armL 3.2s ease-in-out infinite}
+.mascot.idle .arm.r{animation:wave 8s ease-in-out infinite}
+.mascot.idle .leg.r{animation:tap 1.6s ease-in-out infinite}
+.mascot.ready .bod{animation:jig .7s ease-in-out infinite}
+.mascot.ready .arm.l{animation:cheerL .7s ease-in-out infinite}
+.mascot.ready .arm.r{animation:cheerR .7s ease-in-out infinite}
+.mascot.ready .leg.l{animation:tap .7s ease-in-out infinite}
+.mascot.happy .bod{animation:hop .8s cubic-bezier(.3,.7,.3,1)}
+.mascot.happy .arm.l{animation:cheerL .28s ease-in-out 3}
+.mascot.happy .arm.r{animation:cheerR .28s ease-in-out 3}
+.mascot.happy .arm.l{transform:rotate(120deg)}.mascot.happy .arm.r{transform:rotate(-120deg)}
+.mascot.sad .bod{animation:droop .8s ease both}
+.mascot.sad .arm.l{transform:rotate(14deg)}.mascot.sad .arm.r{transform:rotate(-14deg)}
+.mascot.listen .bod{animation:lis 1s ease-in-out infinite}
+.mascot.listen .arm.r{transform:rotate(-150deg);animation:ear .8s ease-in-out infinite}
+.mascot .arm.l{transform-origin:17px 31px}.mascot .arm.r{transform-origin:47px 31px}
+.mascot .leg.l{transform-origin:26px 49px}.mascot .leg.r{transform-origin:38px 49px}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-@keyframes hop{0%{transform:translateY(0) scale(1,1)}25%{transform:translateY(0) scale(1.08,.88)}55%{transform:translateY(-14px) rotate(-6deg) scale(.96,1.06)}80%{transform:translateY(0) rotate(3deg) scale(1.05,.94)}100%{transform:none}}
-@keyframes droop{0%{transform:rotate(0)}30%{transform:rotate(-9deg) translateY(2px)}60%{transform:rotate(6deg) translateY(2px)}100%{transform:rotate(0) translateY(2px) scale(1,.96)}}
-@keyframes lis{0%,100%{transform:scale(1)}50%{transform:scale(1.07,1.04)}}
+@keyframes jig{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+@keyframes hop{0%{transform:translateY(0) scale(1,1)}22%{transform:translateY(0) scale(1.08,.88)}55%{transform:translateY(-16px) rotate(-6deg) scale(.96,1.06)}80%{transform:translateY(0) rotate(3deg) scale(1.05,.94)}100%{transform:none}}
+@keyframes droop{0%{transform:rotate(0)}30%{transform:rotate(-8deg) translateY(2px)}60%{transform:rotate(5deg) translateY(2px)}100%{transform:rotate(0) translateY(3px) scale(1,.96)}}
+@keyframes lis{0%,100%{transform:scale(1)}50%{transform:scale(1.05,1.03)}}
+@keyframes armL{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(9deg)}}
+@keyframes wave{0%,76%,100%{transform:rotate(4deg)}80%{transform:rotate(-140deg)}84%{transform:rotate(-115deg)}88%{transform:rotate(-140deg)}92%{transform:rotate(-115deg)}96%{transform:rotate(-20deg)}}
+@keyframes cheerL{0%,100%{transform:rotate(95deg)}50%{transform:rotate(150deg)}}
+@keyframes cheerR{0%,100%{transform:rotate(-95deg)}50%{transform:rotate(-150deg)}}
+@keyframes tap{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+@keyframes ear{0%,100%{transform:rotate(-150deg)}50%{transform:rotate(-140deg)}}
+@keyframes look{0%,100%{transform:translateX(0)}25%{transform:translateX(1.6px)}60%{transform:translateX(-1.6px)}80%{transform:translateX(0) translateY(1px)}}
 @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
 .lbody.enter .wrap>*{animation:qin .42s cubic-bezier(.2,.8,.2,1) both}
 .lbody.enter .wrap>*:nth-child(2){animation-delay:.05s}
@@ -259,7 +281,7 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .lfoot.ok,.lfoot.bad{animation:fup .32s cubic-bezier(.2,.8,.2,1)}
 @keyframes fup{from{transform:translateY(40%);opacity:.4}to{transform:none;opacity:1}}
 .bar>i{transition:width .5s cubic-bezier(.3,.8,.3,1)}
-@media (prefers-reduced-motion:reduce){.mascot *,.mascot svg,.lbody.enter .wrap>*,.lbody.enter .opt,.opt.right,.opt.wrong,.lfoot.ok,.lfoot.bad{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.mascot *,.mascot svg,.mascot .bod,.lbody.enter .wrap>*,.lbody.enter .opt,.opt.right,.opt.wrong,.lfoot.ok,.lfoot.bad{animation:none!important}}
 .kind{font-size:15px;font-weight:600;color:var(--muted);margin:10px 0 12px}
 .term{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
 .term b{font-weight:800;font-size:28px;line-height:1.1;letter-spacing:-.035em}
@@ -1050,7 +1072,7 @@ function buildLesson(key){
 let toastT=null;
 function toast(msg,ic){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon(ic||'lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
 // ---------- views ----------
-const BUILD='2026-11-07.6';
+const BUILD='2026-11-07.7';
 (function(){const sp=document.getElementById('splash');if(!sp)return;sp.querySelector('.sm').innerHTML=MARK;let shown=false;try{shown=sessionStorage.getItem('rx.splash')==='1';sessionStorage.setItem('rx.splash','1')}catch(e){}
  if(shown){sp.remove();return}setTimeout(()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),400)},1500)})();
 ;
@@ -1136,20 +1158,33 @@ function renderGloss(){
 
 // ---------- lesson engine ----------
 function startLesson(key){const q=buildLesson(key);if(!q.length)return;hideToast();setAccent(key==='review'?BRAND:U[key.split('-')[0]].color);{const us=new Set(q.map(e=>e.w?e.w.uid:(e.ws?e.ws[0].uid:null)).filter(Boolean));if(key!=='review')us.add(key.split('-')[0]);us.forEach(u=>loadSprite(u).catch(()=>{}))}L={key,q,i:0,base:q.length,first:0,wrong:0,retryOk:0};view='lesson';showEx()}
-function showEx(){stopRec();EX={ex:L.q[L.i],sel:null,input:'',placed:[],m:{a:null,b:null,gone:new Set(),errs:0},checked:false,hint:false};renderEx(true)}
+function showEx(){stopRec();EX={costume:Math.random()<.55?pick(COSTUMES):null,ex:L.q[L.i],sel:null,input:'',placed:[],m:{a:null,b:null,gone:new Set(),errs:0},checked:false,hint:false};renderEx(true)}
 const KIND={enes:'Elige la traducción',esen:'¿Cómo se dice en inglés?',fill:'Completa la frase',listen:'Escribe lo que oyes',type:'Escríbelo en inglés',match:'Une las parejas',build:'Traduce esta frase',speak:'Dilo en voz alta'};
-function mascot(m){const ink='#111C24';
- const eyes=m==='happy'?`<g class="eyes"><path d="M11.5 21q5.5-8 11 0M25.5 21q5.5-8 11 0" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></g>`:`<g class="eyes"><circle cx="17" cy="20" r="5.4" fill="#fff"/><circle cx="31" cy="20" r="5.4" fill="#fff"/><circle cx="${m==='listen'?18.4:17.6}" cy="${m==='sad'?21.6:20.6}" r="2.5" fill="${ink}"/><circle cx="${m==='listen'?32.4:31.6}" cy="${m==='sad'?21.6:20.6}" r="2.5" fill="${ink}"/></g>`;
- const brows=m==='sad'?`<path d="M11 12l9 3.4M37 12l-9 3.4" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>`:'';
- const mouth=m==='happy'?`<path d="M16 35h16a8 8 0 0 1-16 0Z" fill="${ink}"/><path d="M20 41.5q4 3 8 0" fill="none" stroke="#F08A8A" stroke-width="2.4" stroke-linecap="round"/>`:m==='sad'?`<path d="M18 43q6-6 12 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`:m==='listen'?`<ellipse cx="24" cy="39" rx="3.6" ry="4.6" fill="${ink}"/>`:`<path d="M18.5 38q5.5 4.5 11 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`;
- const tear=m==='sad'?`<path d="M34 27q2.4 3 0 5.2q-2.4-2.2 0-5.2Z" fill="#7FB8E6"/>`:'';
- return `<svg viewBox="0 0 48 60" aria-hidden="true"><rect x="6" y="6" width="36" height="48" rx="18" fill="#fff"/><path d="M6 30V24a18 18 0 0 1 36 0v6Z" fill="var(--pri)"/>${eyes}${brows}${mouth}${tear}<rect x="6" y="6" width="36" height="48" rx="18" fill="none" stroke="${ink}" stroke-width="2.4"/></svg>`}
-function setMood(m){const el=document.getElementById('mascot');if(!el)return;el.className='mascot '+m;el.innerHTML=mascot(m)}
+const COSTUMES=['grad','party','goggles','crown','cape','mirror','santa'];
+function costumeSvg(c,part){const ink='#111C24';
+ if(part==='back')return c==='cape'?`<path d="M19 28L8 70Q32 80 56 70L45 28Z" fill="#C0392B" stroke="${ink}" stroke-width="2"/>`:'';
+ if(c==='grad')return `<g transform="translate(0,-5)"><path d="M22 10v7q10 5 20 0v-7Z" fill="${ink}"/><path d="M12 9L32 0l20 9-20 9Z" fill="${ink}" stroke="${ink}" stroke-width="1.5" stroke-linejoin="round"/><path d="M50 10v10" stroke="#E0A800" stroke-width="2.2" stroke-linecap="round"/><circle cx="50" cy="21" r="2" fill="#E0A800"/></g>`;
+ if(c==='party')return `<path d="M22 8L32 -14 42 8Z" fill="#F2B134" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/><path d="M25 1l14 0M28 -6l8 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="-15" r="3.2" fill="#E8604C" stroke="${ink}" stroke-width="1.5"/>`;
+ if(c==='goggles')return `<path d="M17 18h-1M47 18h1" stroke="${ink}" stroke-width="2.4"/><circle cx="25.5" cy="18" r="7" fill="#BFE6F2" fill-opacity=".55" stroke="${ink}" stroke-width="2.2"/><circle cx="38.5" cy="18" r="7" fill="#BFE6F2" fill-opacity=".55" stroke="${ink}" stroke-width="2.2"/><path d="M32 18h0" stroke="${ink}" stroke-width="2.4"/>`;
+ if(c==='crown')return `<path d="M21 9L22 -5l6 6 4-9 4 9 6-6 1 14Z" fill="#F2B134" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/>`;
+ if(c==='mirror')return `<path d="M17 13Q32 3 47 13" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/><circle cx="32" cy="7" r="6.4" fill="#DDE6EA" stroke="${ink}" stroke-width="2.2"/><circle cx="30" cy="5.4" r="1.6" fill="#fff"/>`;
+ if(c==='santa')return `<path d="M17 9Q18 -9 36 -8Q44 -7 49 4L47 9Z" fill="#D8423A" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/><rect x="14" y="7" width="36" height="7" rx="3.5" fill="#fff" stroke="${ink}" stroke-width="2"/><circle cx="50" cy="3" r="4.6" fill="#fff" stroke="${ink}" stroke-width="2"/>`;
+ return ''}
+function mascot(m,c){const ink='#111C24';c=c===undefined?(EX&&EX.costume):c;
+ const gog=c==='goggles';
+ const eyes=m==='happy'?`<g class="eyes"><path d="M20.5 20q5-8 10 0M33.5 20q5-8 10 0" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></g>`:`<g class="eyes"><circle cx="26" cy="18" r="4.8" fill="#fff"/><circle cx="38" cy="18" r="4.8" fill="#fff"/><g class="pup"><circle cx="${m==='listen'?27.2:26.4}" cy="${m==='sad'?19.4:18.4}" r="2.2" fill="${ink}"/><circle cx="${m==='listen'?39.2:38.4}" cy="${m==='sad'?19.4:18.4}" r="2.2" fill="${ink}"/></g></g>`;
+ const brows=m==='sad'?`<path d="M19 10l9 3.2M45 10l-9 3.2" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>`:'';
+ const mouth=m==='happy'?`<path d="M25 32h14a7 7 0 0 1-14 0Z" fill="${ink}"/><path d="M28 38.2q4 2.8 8 0" fill="none" stroke="#F08A8A" stroke-width="2.2" stroke-linecap="round"/>`:m==='sad'?`<path d="M27 40q5-5.5 10 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`:m==='listen'?`<ellipse cx="32" cy="36" rx="3.2" ry="4.2" fill="${ink}"/>`:m==='ready'?`<path d="M26.5 33.5q5.5 6 11 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`:`<path d="M27 35q5 4 10 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`;
+ const tear=m==='sad'?`<path d="M41 24q2.4 3 0 5.2q-2.4-2.2 0-5.2Z" fill="#7FB8E6"/>`:'';
+ const limbs=`<g class="leg l"><path d="M26 49L24 66 18 67"/></g><g class="leg r"><path d="M38 49L40 66 46 67"/></g><g class="arm l"><path d="M17 31Q8 35 6 45"/></g><g class="arm r"><path d="M47 31Q56 35 58 45"/></g>`;
+ return `<svg viewBox="0 -16 64 96" aria-hidden="true"><g class="bod">${costumeSvg(c,'back')}${limbs}<rect x="16" y="4" width="32" height="44" rx="16" fill="#fff"/><path d="M16 26V20a16 16 0 0 1 32 0v6Z" fill="var(--pri)"/>${eyes}${brows}${mouth}${tear}<rect x="16" y="4" width="32" height="44" rx="16" fill="none" stroke="${ink}" stroke-width="2.4"/>${costumeSvg(c,'front')}</g></svg>`}
+function setMood(m){const el=document.getElementById('mascot');if(!el||el.classList.contains(m))return;el.className='mascot '+m;el.innerHTML=mascot(m)}
 let lastPct=0;
 function renderEx(first){
  const e=EX.ex,pct=Math.round(L.i/L.q.length*100);
  if(first&&L.i===0)lastPct=0;
- let body=`<div class="kindrow${['listen','match','speak'].includes(e.type)?' free':''}"><div class="kindtxt">${KIND[e.type]}</div><span id="mascot" class="mascot ${EX.listening?'listen':'idle'}">${mascot(EX.listening?'listen':'idle')}</span></div>`;
+ const mood0=EX.listening?'listen':(!EX.checked&&(EX.sel!=null||EX.placed.length||(EX.input||'').trim())?'ready':'idle');
+ let body=`<div class="kindrow"><span id="mascot" class="mascot ${mood0}">${mascot(mood0)}</span><div class="bubble">${KIND[e.type]}</div></div>`;
  if(e.type==='enes'){body+=`<div class="term">${e.w.noListen||!SPEAKABLE?'':`<button class="spk" data-act="say" data-t="${esc(e.w.en)}" aria-label="Escuchar">${icon('vol',20)}</button>`}<b>${esc(e.w.en)}</b></div>`+opts(e)}
  else if(e.type==='esen'){body+=`<div class="term"><b>${esc(e.w.es)}</b></div>`+opts(e)}
  else if(e.type==='fill'){const v=EX.sel!=null?esc(e.opts[EX.sel]):'&nbsp;';body+=`<div class="sentence">${esc(e.before)}<span class="blank">${v}</span>${esc(e.after)}</div>`+(EX.hint?`<div class="hinttext">${esc(e.w.exEs)}</div>`:`<button class="hint" data-act="hint">Ver traducción</button>`)+opts(e)}
@@ -1162,7 +1197,7 @@ function renderEx(first){
  const foot=e.type==='speak'&&!EX.checked?`<div class="lfoot"><div class="wrap"><button class="btn ghostbtn" data-act="cantspeak">Ahora no puedo hablar</button></div></div>`:e.type==='match'&&!EX.checked?`<div class="lfoot"><div class="wrap"><button class="btn ghostbtn" data-act="skipmatch">Saltar</button></div></div>`:`<div class="lfoot" id="foot"><div class="wrap"><div class="fb" id="fb"></div><button class="btn" id="cbtn" data-act="check" ${ready?'':'disabled'}>Comprobar</button></div></div>`;
  $('#app').innerHTML=`<div class="lesson"><div class="wrap" style="width:100%"><div class="lbar"><button class="x" data-act="quit" aria-label="Salir">${icon('x',22)}</button><div class="bar"><i style="width:${first?lastPct:pct}%"></i></div></div></div><div class="lbody${first?' enter':''}"><div class="wrap">${body}</div></div>${foot}</div>`;
  if(first){const bi=document.querySelector('.bar>i');if(bi)setTimeout(()=>{bi.style.width=pct+'%'},40)}lastPct=pct;
- const inp=$('#inp');if(inp){inp.addEventListener('input',ev=>{EX.input=ev.target.value;const b=$('#cbtn');if(b&&!EX.checked)b.disabled=!canCheck()});inp.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();const b=$('#cbtn');if(b&&!b.disabled)b.click()}});if(first)setTimeout(()=>{try{inp.focus()}catch(_){}},60)}
+ const inp=$('#inp');if(inp){inp.addEventListener('input',ev=>{EX.input=ev.target.value;if(!EX.checked)setMood(EX.input.trim()?'ready':'idle');const b=$('#cbtn');if(b&&!EX.checked)b.disabled=!canCheck()});inp.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();const b=$('#cbtn');if(b&&!b.disabled)b.click()}});if(first)setTimeout(()=>{try{inp.focus()}catch(_){}},60)}
  if(first){if(e.type==='enes'&&!e.w.noListen)autoSpeak(e.w.en);if(e.type==='listen')speak(e.answer)}
 }
 function opts(e){return `<div class="opts">${e.opts.map((o,i)=>{let c='';if(EX.checked){if(o===e.answer)c='right';else if(i===EX.sel)c='wrong'}else if(i===EX.sel)c='sel';return `<button class="opt ${c}" data-act="opt" data-i="${i}" ${EX.checked?'disabled':''}>${esc(o)}</button>`}).join('')}</div>`}
