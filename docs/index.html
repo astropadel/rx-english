@@ -30,6 +30,16 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .ic{display:block;flex:none}
 .ic.fill{fill:currentColor}
 .wrap{max-width:540px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left))}
+#splash{position:fixed;inset:0;z-index:100;background:var(--ink);display:grid;place-items:center;transition:opacity .35s ease,visibility .35s}
+#splash.out{opacity:0;visibility:hidden}
+#splash .sp{display:flex;flex-direction:column;align-items:center;gap:16px;animation:spin .55s cubic-bezier(.2,.8,.2,1) both}
+#splash .sm{width:76px;height:76px;border-radius:24px;background:#fff;display:grid;place-items:center}
+#splash .sm svg{width:40px;height:40px}
+#splash .sm svg *{stroke:var(--ink)!important}
+#splash b{color:#fff;font-size:26px;font-weight:800;letter-spacing:-.04em}
+#splash b span{color:#9AA7AF;font-weight:600}
+@keyframes spin{from{opacity:0;transform:scale(.85) translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#splash .sp{animation:none}}
 #app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 #app>.wrap{flex:1 0 auto;width:100%}
 /* header */
@@ -285,6 +295,7 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="sp"><div class="sm"></div><b>Rx <span>English</span></b></div></div>
 <div id="app"></div>
 <script>
 /*DATA*/
@@ -943,7 +954,10 @@ function buildLesson(key){
 let toastT=null;
 function toast(msg,ic){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon(ic||'lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
 // ---------- views ----------
-const BUILD='2026-11-05.2';
+const BUILD='2026-11-07.1';
+(function(){const sp=document.getElementById('splash');if(!sp)return;sp.querySelector('.sm').innerHTML=MARK;let shown=false;try{shown=sessionStorage.getItem('rx.splash')==='1';sessionStorage.setItem('rx.splash','1')}catch(e){}
+ if(shown){sp.remove();return}setTimeout(()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),400)},950)})();
+;
 const CAN_UPDATE=/github\.io$|^localhost$|^127\./.test(location.hostname);
 let updating=false;
 async function checkUpdate(){if(updating)return;updating=true;const b=document.getElementById('updbtn');if(b){b.disabled=true;b.textContent='Buscando…'}
