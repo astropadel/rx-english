@@ -225,6 +225,37 @@ button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px
 .lbar .bar{flex:1}
 .x{border:0;background:transparent;color:var(--muted);padding:6px;border-radius:12px;display:grid;place-items:center}
 .lbody{flex:1;padding-bottom:22px}
+.kindrow{display:flex;align-items:center;gap:12px;margin:6px 0 14px}
+.bubble{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-size:15.5px;font-weight:700;letter-spacing:-.015em;color:var(--ink)}
+.bubble::before{content:"";position:absolute;left:-6px;top:50%;width:11px;height:11px;background:#fff;border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
+.mascot{display:inline-block;width:46px;height:58px;flex:none}
+.mascot svg{width:100%;height:100%;overflow:visible;display:block;transform-origin:50% 100%}
+.mascot .eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
+.mascot.idle svg{animation:bob 2.8s ease-in-out infinite}
+.mascot.happy svg{animation:hop .75s cubic-bezier(.3,.7,.3,1)}
+.mascot.sad svg{animation:droop .7s ease both}
+.mascot.listen svg{animation:lis 1s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes hop{0%{transform:translateY(0) scale(1,1)}25%{transform:translateY(0) scale(1.08,.88)}55%{transform:translateY(-14px) rotate(-6deg) scale(.96,1.06)}80%{transform:translateY(0) rotate(3deg) scale(1.05,.94)}100%{transform:none}}
+@keyframes droop{0%{transform:rotate(0)}30%{transform:rotate(-9deg) translateY(2px)}60%{transform:rotate(6deg) translateY(2px)}100%{transform:rotate(0) translateY(2px) scale(1,.96)}}
+@keyframes lis{0%,100%{transform:scale(1)}50%{transform:scale(1.07,1.04)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.lbody.enter .wrap>*{animation:qin .42s cubic-bezier(.2,.8,.2,1) both}
+.lbody.enter .wrap>*:nth-child(2){animation-delay:.05s}
+.lbody.enter .wrap>*:nth-child(3){animation-delay:.1s}
+.lbody.enter .wrap>*:nth-child(4){animation-delay:.15s}
+.lbody.enter .opt{animation:qopt .42s cubic-bezier(.2,.8,.2,1) both}
+.lbody.enter .opt:nth-child(1){animation-delay:.14s}.lbody.enter .opt:nth-child(2){animation-delay:.2s}.lbody.enter .opt:nth-child(3){animation-delay:.26s}.lbody.enter .opt:nth-child(4){animation-delay:.32s}
+@keyframes qin{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes qopt{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.opt.right{animation:rpop .5s cubic-bezier(.2,1.5,.4,1)}
+.opt.wrong{animation:wshake .45s ease}
+@keyframes rpop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes wshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}45%{transform:translateX(6px)}70%{transform:translateX(-4px)}}
+.lfoot.ok,.lfoot.bad{animation:fup .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes fup{from{transform:translateY(40%);opacity:.4}to{transform:none;opacity:1}}
+.bar>i{transition:width .5s cubic-bezier(.3,.8,.3,1)}
+@media (prefers-reduced-motion:reduce){.mascot *,.mascot svg,.lbody.enter .wrap>*,.lbody.enter .opt,.opt.right,.opt.wrong,.lfoot.ok,.lfoot.bad{animation:none!important}}
 .kind{font-size:15px;font-weight:600;color:var(--muted);margin:10px 0 12px}
 .term{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
 .term b{font-weight:800;font-size:28px;line-height:1.1;letter-spacing:-.035em}
@@ -1015,7 +1046,7 @@ function buildLesson(key){
 let toastT=null;
 function toast(msg,ic){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.innerHTML=icon(ic||'lock',16)+'<span>'+esc(msg)+'</span>';t.style.display='flex';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none'},2300)}
 // ---------- views ----------
-const BUILD='2026-11-07.4';
+const BUILD='2026-11-07.5';
 (function(){const sp=document.getElementById('splash');if(!sp)return;sp.querySelector('.sm').innerHTML=MARK;let shown=false;try{shown=sessionStorage.getItem('rx.splash')==='1';sessionStorage.setItem('rx.splash','1')}catch(e){}
  if(shown){sp.remove();return}setTimeout(()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),400)},1500)})();
 ;
@@ -1103,9 +1134,18 @@ function renderGloss(){
 function startLesson(key){const q=buildLesson(key);if(!q.length)return;hideToast();setAccent(key==='review'?BRAND:U[key.split('-')[0]].color);{const us=new Set(q.map(e=>e.w?e.w.uid:(e.ws?e.ws[0].uid:null)).filter(Boolean));if(key!=='review')us.add(key.split('-')[0]);us.forEach(u=>loadSprite(u).catch(()=>{}))}L={key,q,i:0,base:q.length,first:0,wrong:0,retryOk:0};view='lesson';showEx()}
 function showEx(){stopRec();EX={ex:L.q[L.i],sel:null,input:'',placed:[],m:{a:null,b:null,gone:new Set(),errs:0},checked:false,hint:false};renderEx(true)}
 const KIND={enes:'Elige la traducción',esen:'¿Cómo se dice en inglés?',fill:'Completa la frase',listen:'Escribe lo que oyes',type:'Escríbelo en inglés',match:'Une las parejas',build:'Traduce esta frase',speak:'Dilo en voz alta'};
+function mascot(m){const ink='#111C24';
+ const eyes=m==='happy'?`<g class="eyes"><path d="M11.5 21q5.5-8 11 0M25.5 21q5.5-8 11 0" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></g>`:`<g class="eyes"><circle cx="17" cy="20" r="5.4" fill="#fff"/><circle cx="31" cy="20" r="5.4" fill="#fff"/><circle cx="${m==='listen'?18.4:17.6}" cy="${m==='sad'?21.6:20.6}" r="2.5" fill="${ink}"/><circle cx="${m==='listen'?32.4:31.6}" cy="${m==='sad'?21.6:20.6}" r="2.5" fill="${ink}"/></g>`;
+ const brows=m==='sad'?`<path d="M11 12l9 3.4M37 12l-9 3.4" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>`:'';
+ const mouth=m==='happy'?`<path d="M16 35h16a8 8 0 0 1-16 0Z" fill="${ink}"/><path d="M20 41.5q4 3 8 0" fill="none" stroke="#F08A8A" stroke-width="2.4" stroke-linecap="round"/>`:m==='sad'?`<path d="M18 43q6-6 12 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`:m==='listen'?`<ellipse cx="24" cy="39" rx="3.6" ry="4.6" fill="${ink}"/>`:`<path d="M18.5 38q5.5 4.5 11 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`;
+ const tear=m==='sad'?`<path d="M34 27q2.4 3 0 5.2q-2.4-2.2 0-5.2Z" fill="#7FB8E6"/>`:'';
+ return `<svg viewBox="0 0 48 60" aria-hidden="true"><rect x="6" y="6" width="36" height="48" rx="18" fill="#fff"/><path d="M6 30V24a18 18 0 0 1 36 0v6Z" fill="var(--pri)"/>${eyes}${brows}${mouth}${tear}<rect x="6" y="6" width="36" height="48" rx="18" fill="none" stroke="${ink}" stroke-width="2.4"/></svg>`}
+function setMood(m){const el=document.getElementById('mascot');if(!el)return;el.className='mascot '+m;el.innerHTML=mascot(m)}
+let lastPct=0;
 function renderEx(first){
  const e=EX.ex,pct=Math.round(L.i/L.q.length*100);
- let body=`<div class="kind">${KIND[e.type]}</div>`;
+ if(first&&L.i===0)lastPct=0;
+ let body=`<div class="kindrow"><span id="mascot" class="mascot ${EX.listening?'listen':'idle'}">${mascot(EX.listening?'listen':'idle')}</span><div class="bubble">${KIND[e.type]}</div></div>`;
  if(e.type==='enes'){body+=`<div class="term">${e.w.noListen||!SPEAKABLE?'':`<button class="spk" data-act="say" data-t="${esc(e.w.en)}" aria-label="Escuchar">${icon('vol',20)}</button>`}<b>${esc(e.w.en)}</b></div>`+opts(e)}
  else if(e.type==='esen'){body+=`<div class="term"><b>${esc(e.w.es)}</b></div>`+opts(e)}
  else if(e.type==='fill'){const v=EX.sel!=null?esc(e.opts[EX.sel]):'&nbsp;';body+=`<div class="sentence">${esc(e.before)}<span class="blank">${v}</span>${esc(e.after)}</div>`+(EX.hint?`<div class="hinttext">${esc(e.w.exEs)}</div>`:`<button class="hint" data-act="hint">Ver traducción</button>`)+opts(e)}
@@ -1116,7 +1156,8 @@ function renderEx(first){
  else if(e.type==='build'){body+=`<div class="esbox"><span class="qico">${icon('msg',20)}</span><div class="bub">${esc(e.s[1])}</div></div><div class="answerline">${EX.placed.map((bi,pos)=>`<button class="tile" data-act="unplace" data-pos="${pos}" ${EX.checked?'disabled':''}>${esc(e.bank[bi].t)}</button>`).join('')}</div><div class="bank">${e.bank.map((b,bi)=>`<button class="tile ${EX.placed.includes(bi)?'ghost':''}" data-act="place" data-bi="${bi}" ${EX.checked?'disabled':''}>${esc(b.t)}</button>`).join('')}</div>`}
  const ready=canCheck();
  const foot=e.type==='speak'&&!EX.checked?`<div class="lfoot"><div class="wrap"><button class="btn ghostbtn" data-act="cantspeak">Ahora no puedo hablar</button></div></div>`:e.type==='match'&&!EX.checked?`<div class="lfoot"><div class="wrap"><button class="btn ghostbtn" data-act="skipmatch">Saltar</button></div></div>`:`<div class="lfoot" id="foot"><div class="wrap"><div class="fb" id="fb"></div><button class="btn" id="cbtn" data-act="check" ${ready?'':'disabled'}>Comprobar</button></div></div>`;
- $('#app').innerHTML=`<div class="lesson"><div class="wrap" style="width:100%"><div class="lbar"><button class="x" data-act="quit" aria-label="Salir">${icon('x',22)}</button><div class="bar"><i style="width:${pct}%"></i></div></div></div><div class="lbody"><div class="wrap">${body}</div></div>${foot}</div>`;
+ $('#app').innerHTML=`<div class="lesson"><div class="wrap" style="width:100%"><div class="lbar"><button class="x" data-act="quit" aria-label="Salir">${icon('x',22)}</button><div class="bar"><i style="width:${first?lastPct:pct}%"></i></div></div></div><div class="lbody${first?' enter':''}"><div class="wrap">${body}</div></div>${foot}</div>`;
+ if(first){const bi=document.querySelector('.bar>i');if(bi)setTimeout(()=>{bi.style.width=pct+'%'},40)}lastPct=pct;
  const inp=$('#inp');if(inp){inp.addEventListener('input',ev=>{EX.input=ev.target.value;const b=$('#cbtn');if(b&&!EX.checked)b.disabled=!canCheck()});inp.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();const b=$('#cbtn');if(b&&!b.disabled)b.click()}});if(first)setTimeout(()=>{try{inp.focus()}catch(_){}},60)}
  if(first){if(e.type==='enes'&&!e.w.noListen)autoSpeak(e.w.en);if(e.type==='listen')speak(e.answer)}
 }
@@ -1136,7 +1177,7 @@ function check(){const e=EX.ex;const{ok,almost}=grade();EX.checked=true;
 function hl(ex,tok){const m=ex.match(new RegExp('(^|[^A-Za-z])('+reEsc(tok)+')(?![A-Za-z])','i'));if(!m)return esc(ex);const i=m.index+m[1].length;return esc(ex.slice(0,i))+'<mark>'+esc(m[2])+'</mark>'+esc(ex.slice(i+m[2].length))}
 const PRAISE=['¡Muy bien!','¡Perfecto!','¡Eso es!','¡Genial!','¡Bien hecho!','¡Así se hace!'];
 function feedback(ok,almost){const e=EX.ex,foot=$('#foot'),fb=$('#fb'),b=$('#cbtn');if(!foot)return;
- foot.className='lfoot '+(ok?'ok':'bad');
+ foot.className='lfoot '+(ok?'ok':'bad');setMood(ok?'happy':'sad');
  let h=`<h3>${icon(ok?'checkc':'xc',22)}<span>${ok?(almost?'¡Casi perfecto!':pick(PRAISE)):'Respuesta correcta:'}</span></h3>`;
  if(!ok||almost){if(e.type==='enes')h+=`<div class="ans">${esc(e.w.en)} = ${esc(e.answer)}</div>`;else if(e.type==='build')h+=`<div class="ans">${esc(e.answer)}</div>`;else h+=`<div class="ans">${esc(e.answer)}${almost?' · revisa la ortografía':''}</div>`}
  if(e.type==='match'&&!ok)h=`<h3>${icon('xc',22)}<span>Repasaremos estas parejas</span></h3>`;
